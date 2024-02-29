@@ -1,6 +1,4 @@
-import { ConnectWallet } from "@thirdweb-dev/react";
 import styles from "../styles/Home.module.css";
-import Image from "next/image";
 import { NextPage } from "next";
 
 const Home: NextPage = () => {
@@ -9,23 +7,14 @@ const Home: NextPage = () => {
       <div className={styles.container}>
         <div className={styles.header}>
           <h1 className={styles.title}>
-            Welcome to{" "}
+            My
             <span className={styles.gradientText0}>
-              <a
-                href="https://thirdweb.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                thirdweb.
-              </a>
+                Contracts
+              
             </span>
           </h1>
 
-          <p className={styles.description}>
-            Get started by configuring your desired network in{" "}
-            <code className={styles.code}>src/index.js</code>, then modify the{" "}
-            <code className={styles.code}>src/App.js</code> file!
-          </p>
+          <p className={styles.description}> Select a contract to interact with. </p>
         </div>
 
         <div className={styles.grid}>
