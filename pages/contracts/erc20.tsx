@@ -67,7 +67,7 @@ export default function Erc20() {
                     <h3>Earned Tokens</h3>
                     <p>Earn more Tokens by staking your NFT</p>
                     <div>
-                        <Link href="/contracts/staking"><button className={styles.matchButton}>Stake NFT</button></Link>
+                        <Link href="/contracts/erc721"><button className={styles.matchButton}>Stake NFT</button></Link>
                     </div>
                 </div>
                 
