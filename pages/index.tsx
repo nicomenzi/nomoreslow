@@ -2,7 +2,7 @@ import { Contract } from "ethers";
 import styles from "../styles/Home.module.css";
 import { NextPage } from "next";
 import ContractCard from "../components/contrac-card";
-import { ERC20_CONTRACT_ADDRESS } from "../constants/addresses";
+import { ERC1155_CONTRACT_ADDRESS, ERC20_CONTRACT_ADDRESS, ERC721_CONTRACT_ADDRESS, STAKING_CONTRACT_ADDRESS } from "../constants/addresses";
 
 const Home: NextPage = () => {
   return (
@@ -22,10 +22,28 @@ const Home: NextPage = () => {
 
         <div className={styles.grid}>
           <ContractCard
-            href="/"
+            href="/contracts/erc20"
             contractAddress={ERC20_CONTRACT_ADDRESS}
             title="ERC20"
             description="Claim ERC 20 Tokens"
+          />
+          <ContractCard
+            href="/"
+            contractAddress={ERC721_CONTRACT_ADDRESS}
+            title="ERC721"
+            description="Claim ERC 721 Tokens"
+          />
+          <ContractCard
+            href="/"
+            contractAddress={ERC1155_CONTRACT_ADDRESS}
+            title="ERC1155"
+            description="Claim ERC 1155 Tokens"
+          />
+          <ContractCard
+            href="/"
+            contractAddress={STAKING_CONTRACT_ADDRESS}
+            title="Staking"
+            description="Stake"
           />
         </div>
       </div>
