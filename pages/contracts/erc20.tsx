@@ -1,8 +1,10 @@
 import { useContract, useContractMetadata, useTokenSupply, useAddress, useTokenBalance, Web3Button } from "@thirdweb-dev/react";
 import HeroCard from "../../components/hero-card";
-import { ERC20_CONTRACT_ADDRESS } from "../../constants/addresses";
+import { contractAddresses } from "../../constants/addresses";
 import styles from "../../styles/Home.module.css";
 import Link from "next/link";
+import { useContext, useEffect, useState } from "react";
+import ChainContext from "../../context/chain";
 
 
 
@@ -10,9 +12,13 @@ export default function Erc20() {
 
     const address = useAddress();
 
+    const { selectedChain, setSelectedChain } = useContext(ChainContext);
+
+    const [contractAddress, setContractAddress] = useState(contractAddresses[selectedChain.name][1]);
+
     const {
-        contract
-    } = useContract(ERC20_CONTRACT_ADDRESS, "token");
+        contract,
+    } = useContract(contractAddress, "token");
 
     const {
         data: contractMetadata,
@@ -28,6 +34,11 @@ export default function Erc20() {
         data : tokenBalance,
         isLoading: tokenBalanceIsLoading
     } = useTokenBalance(contract, address);
+
+    useEffect(() => {
+        setContractAddress(contractAddresses[selectedChain.name][1]);
+        console.log(contractAddress);
+    }, [selectedChain]);
 
 
     return (
@@ -59,7 +70,7 @@ export default function Erc20() {
                         </div>
                     )}
                     <Web3Button 
-                        contractAddress={ERC20_CONTRACT_ADDRESS}
+                        contractAddress={contractAddress}
                         action={(contract) => contract.erc20.burn(10)}
                     >Burn 10 Tokens</Web3Button>
                 </div>
