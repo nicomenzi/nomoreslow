@@ -1,15 +1,22 @@
 import { ThirdwebNftMedia, Web3Button, useAddress, useClaimedNFTSupply, useContract, useContractMetadata, useOwnedNFTs, useTotalCount } from '@thirdweb-dev/react';
 import HeroCard from '../../components/hero-card'
-import { ERC721_CONTRACT_ADDRESS } from '../../constants/addresses';
+import { contractAddresses } from "../../constants/addresses";
 import styles from '../../styles/Home.module.css'
 import NFTstyles from '../../styles/NFT.module.css'
 import Link from 'next/link';
+import { useContext, useEffect, useState } from 'react';
+import ChainContext from '../../context/chain';
 
 export default function Erc721() {
+
+    const { selectedChain, setSelectedChain } = useContext(ChainContext);
+
+    const [erc721contractAddress, seterc721ContractAddress] = useState(contractAddresses[selectedChain.name][0]);
+
     const address = useAddress();
     const {
         contract
-    } = useContract(ERC721_CONTRACT_ADDRESS, "signature-drop");
+    } = useContract(erc721contractAddress, "signature-drop");
     const {
         data: contractMetadata,
         isLoading: contractMetadataIsLoading
@@ -30,6 +37,10 @@ export default function Erc721() {
         isLoading: ownedNFTsIsLoading
     } = useOwnedNFTs(contract, address);
 
+    useEffect(() => {
+        seterc721ContractAddress(contractAddresses[selectedChain.name][0]);
+    }, [selectedChain]);
+
     return (
         <div className={styles.container}>
             <div className={styles.contractPage}>
@@ -44,7 +55,7 @@ export default function Erc721() {
                         <h3>Claim ERC721</h3>
                         <p>Claim your free NFT</p>
                         <Web3Button
-                            contractAddress={ERC721_CONTRACT_ADDRESS}
+                            contractAddress={erc721contractAddress}
                             action={(contract) => contract.erc721.claim(1)}
                             onSuccess={() => alert("NFT Claimed!")}
                         >Claim NFT</Web3Button>

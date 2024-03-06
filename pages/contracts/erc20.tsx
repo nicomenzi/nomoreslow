@@ -11,12 +11,12 @@ import ChainContext from "../../context/chain";
 export default function Erc20() {
 
     const address = useAddress();
-
+                              
     const { selectedChain, setSelectedChain } = useContext(ChainContext);
 
     const [contractAddress, setContractAddress] = useState(contractAddresses[selectedChain.name][1]);
 
-    const {
+     const {
         contract,
     } = useContract(contractAddress, "token");
 

@@ -1,6 +1,8 @@
 import { ThirdwebNftMedia, Web3Button, useAddress, useContract, useNFT } from "@thirdweb-dev/react";
-import { ERC721_CONTRACT_ADDRESS, STAKING_CONTRACT_ADDRESS } from "../constants/addresses";
+import { contractAddresses } from "../constants/addresses";
 import styles from "../styles/Home.module.css";
+import { useContext, useEffect, useState } from "react";
+import ChainContext from "../context/chain";
 
 
 type NFTprops = {
@@ -8,13 +10,25 @@ type NFTprops = {
 };
 
 export default function UnstakeNFTCard({ tokenid }: NFTprops) {
+
+    const { selectedChain, setSelectedChain } = useContext(ChainContext);
+
+    const [erc721contractAddress, seterc721ContractAddress] = useState(contractAddresses[selectedChain.name][0]);
+
+    const [stakingContractAddress, setStakingContractAddress] = useState(contractAddresses[selectedChain.name][3]);
+
+    useEffect(() => {
+        seterc721ContractAddress(contractAddresses[selectedChain.name][0]);
+        setStakingContractAddress(contractAddresses[selectedChain.name][3]);
+    }, [selectedChain]);
+
     const {
         contract: NFTcontract
-    } = useContract(ERC721_CONTRACT_ADDRESS, "signature-drop");
+    } = useContract(erc721contractAddress, "signature-drop");
 
     const {
         contract: stakeContract
-    } = useContract(STAKING_CONTRACT_ADDRESS);
+    } = useContract(stakingContractAddress);
 
     const {
         data: nftMetadata,
@@ -37,7 +51,7 @@ export default function UnstakeNFTCard({ tokenid }: NFTprops) {
                 <p className={styles.nftTokenId}> TOKEN ID# {nftMetadata?.metadata.id}</p>
             </div>
             <Web3Button
-                contractAddress={STAKING_CONTRACT_ADDRESS}
+                contractAddress={stakingContractAddress}
                 action={(contract) => contract.call("withdraw", [[tokenid]])}
                 style={{ width: "100%" }}
             >

@@ -1,24 +1,34 @@
 import { Web3Button, useAddress, useContract, useContractMetadata, useContractRead, useOwnedNFTs, useTokenBalance } from '@thirdweb-dev/react';
 import HeroCard from '../../components/hero-card'
 import styles from '../../styles/Home.module.css'
-import { ERC20_CONTRACT_ADDRESS, ERC721_CONTRACT_ADDRESS, STAKING_CONTRACT_ADDRESS } from '../../constants/addresses';
-import { use, useEffect, useState } from 'react';
+import { contractAddresses } from "../../constants/addresses";
+import { use, useContext, useEffect, useState } from 'react';
 import { BigNumber, ethers } from 'ethers';
 import StakeNFTCard from '../../components/stake-nft-card';
 import UnstakeNFTCard from '../../components/unstake-nft-card';
+import ChainContext from '../../context/chain';
 
 export default function Staking() {
 
     const address = useAddress();
     const [claimableRewards, setClaimableRewards] = useState<BigNumber>();
 
+    const { selectedChain, setSelectedChain } = useContext(ChainContext);
+
+    const [erc20contractAddress, seterc20ContractAddress] = useState(contractAddresses[selectedChain.name][1]);
+
+    const [erc721contractAddress, seterc721ContractAddress] = useState(contractAddresses[selectedChain.name][0]);
+
+    const [stakingContractAddress, setStakingContractAddress] = useState(contractAddresses[selectedChain.name][3]);
+
+
     const {
         contract: stakeContract
-    } = useContract(STAKING_CONTRACT_ADDRESS);
+    } = useContract(stakingContractAddress);
 
     const {
         contract: NFTcontract
-    } = useContract(ERC721_CONTRACT_ADDRESS);
+    } = useContract(erc721contractAddress);
 
     const {
         data: stakingMetadata,
@@ -27,7 +37,7 @@ export default function Staking() {
 
     const {
         contract: erc20Contract
-    } = useContract(ERC20_CONTRACT_ADDRESS);
+    } = useContract(erc20contractAddress);
 
     const {
         data: tokenbalance,
@@ -42,7 +52,7 @@ export default function Staking() {
     const {
         data: stakedNFts,
         isLoading: stakedNFTsIsLoading
-    } = useContractRead(stakeContract, "getStakeInfo", [address]);
+    } = useContractRead(stakingContractAddress, "getStakeInfo", [address]);
 
     useEffect(() => {
         if(!stakeContract || !address) return;
@@ -56,6 +66,12 @@ export default function Staking() {
         };
         getClaimableRewards();
     }, [stakeContract, address]);
+
+    useEffect(() => {
+        seterc721ContractAddress(contractAddresses[selectedChain.name][0]);
+        setStakingContractAddress(contractAddresses[selectedChain.name][3]);
+        seterc20ContractAddress(contractAddresses[selectedChain.name][1]);
+    }, [selectedChain]);
 
     
 
@@ -82,7 +98,7 @@ export default function Staking() {
                             <p>Claimable Rewards: {ethers.utils.formatEther(claimableRewards)} {tokenbalance?.symbol}</p>
                         )}
                         <Web3Button
-                            contractAddress={STAKING_CONTRACT_ADDRESS}
+                            contractAddress={stakingContractAddress}
                             action={(contract) => contract.call("claimRewards", [address])}
                             onSuccess={() => {
                                 alert("Rewards Claimed!");
