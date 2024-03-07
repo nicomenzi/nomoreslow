@@ -19,7 +19,7 @@ export default function Staking() {
 
     const [erc721contractAddress, seterc721ContractAddress] = useState(contractAddresses[selectedChain.name][0]);
 
-    const [stakingContractAddress, setStakingContractAddress] = useState(contractAddresses[selectedChain.name][3]);
+    const [stakingContractAddress, setStakingContractAddress] = useState<string>(contractAddresses[selectedChain.name][3]);
 
 
     const {
@@ -52,26 +52,29 @@ export default function Staking() {
     const {
         data: stakedNFts,
         isLoading: stakedNFTsIsLoading
-    } = useContractRead(stakingContractAddress, "getStakeInfo", [address]);
-
-    useEffect(() => {
-        if(!stakeContract || !address) return;
-
-        async function getClaimableRewards() {
-            const claimableRewards = await stakeContract?.call(
-                "getStakeInfo",
-                [address]
-            )
-            setClaimableRewards(claimableRewards[1]);
-        };
-        getClaimableRewards();
-    }, [stakeContract, address]);
+    } = useContractRead(stakeContract, "getStakeInfo", [address]);
 
     useEffect(() => {
         seterc721ContractAddress(contractAddresses[selectedChain.name][0]);
         setStakingContractAddress(contractAddresses[selectedChain.name][3]);
         seterc20ContractAddress(contractAddresses[selectedChain.name][1]);
     }, [selectedChain]);
+
+
+    useEffect(() => {
+        if(!stakeContract || !address) return;
+
+        async function getClaimableRewards() {
+            console.log("getting claimable rewards");
+            const claimableRewards = await stakeContract?.call(
+                "getStakeInfo",
+                [address]
+            );
+            setClaimableRewards(claimableRewards[1]);
+        };
+        getClaimableRewards();
+    }, [stakeContract, address]);
+
 
     
 
