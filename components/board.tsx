@@ -1,4 +1,5 @@
 import styles from '../styles/Board.module.css';
+import Tile from './tile';
 
 export default function Board() {
 
@@ -16,6 +17,9 @@ export default function Board() {
 
     return (
         <div className={styles.board}>
+            <div className={styles.tiles}>
+            <Tile />
+            </div>
            <div className={styles.grid}>
                 {renderGrid()}
             </div>
