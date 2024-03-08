@@ -34,6 +34,7 @@ const Home: NextPage = () => {
               
             </span>
           </h1>
+    
 
           <p className={styles.description}> Select a contract to interact with. </p>
         </div>

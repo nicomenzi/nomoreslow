@@ -1,5 +1,18 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
 
+:root {
+  --pixel-size: 8px;
+
+
+  --primary-background: #fafae7;
+  --secondary-background: #bbada0;
+  --cell-background: #cac1b5;
+
+
+  --primary-text-color: #776e65;
+}
+
+
 html,
 body {
   padding: 0;
