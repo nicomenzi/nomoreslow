@@ -24,7 +24,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       supportedChains={[Sepolia, Scroll]}
 
     >
-      <Navbar />
+      {/* <Navbar /> */}
       <Component {...pageProps} />
     </ThirdwebProvider>
     </ChainContext.Provider>
