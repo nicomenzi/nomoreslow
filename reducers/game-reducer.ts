@@ -1,4 +1,4 @@
-import { create, isNil } from "lodash";
+import { create, flattenDeep, isNil } from "lodash";
 import { tileCountPerDimension } from "../constants/gameConstants";
 import { Tile, TileMap } from "../models/tile";
 import { uid } from "uid";
@@ -11,7 +11,8 @@ type Action =
     | { type: "move_up"; } 
     | { type: "move_down"; } 
     | { type: "move_left"; } 
-    | { type: "move_right"; };
+    | { type: "move_right"; }
+    | { type: "clean_up"; }
 
 function createBoard() {
     const board: string [][] = [];
@@ -27,6 +28,23 @@ export const initialState: State = {board: createBoard(), tiles: {}};
 export default function gamerReducer(state: State = initialState, action: Action) {
 
     switch (action.type) {
+        case "clean_up": {
+            const flattenedBoard = flattenDeep(state.board);
+            const newTiles: TileMap = flattenedBoard.reduce((result, tileId: string) => {
+                if (isNil(tileId)) {
+                    return result
+                }
+                return {
+                    ...result,
+                    [tileId]: state.tiles[tileId]
+                };
+            }, {});
+            return {
+                ...state,
+                tiles: newTiles
+            };
+        }
+
         case "create_tile": {
             const tileId = uid();
             const [x,y] = action.tile.position;

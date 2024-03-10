@@ -6,6 +6,41 @@ import { init } from "next/dist/compiled/webpack/webpack";
 import { isNil } from "lodash";
 
 describe("game-reducers", () => {
+
+    describe("clean_up", () => {
+        it("should remove tiles that aren't referenced", () => {
+            const tile1: Tile = {
+                position: [0,1],
+                value: 2
+            }
+
+            const tile2: Tile = {
+                position: [0,3],
+                value: 2
+            }
+
+            const {result} = renderHook(() => useReducer(gamerReducer, initialState))
+            const [, discpatch] = result.current;
+
+            act(() => {
+                discpatch({type: "create_tile", tile: tile1})
+                discpatch({type: "create_tile", tile: tile2})
+                discpatch({type: "move_up"})
+            });
+
+            const [stateBefore] = result.current;
+            expect(Object.values(stateBefore.tiles)).toHaveLength(2);
+
+            act(() => discpatch({type: "clean_up"}));
+
+            const [stateAfter] = result.current;
+            expect(Object.values(stateAfter.tiles)).toHaveLength(1);
+            
+        }
+        
+        )
+    });
+
     describe("create_tile", () => {
         it("should create a new tile", () => {
             const tile: Tile = {
