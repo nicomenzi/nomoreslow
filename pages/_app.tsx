@@ -5,6 +5,7 @@ import "../styles/globals.css";
 import Navbar from "../components/navbar";
 import { useState } from "react";
 import ChainContext from "../context/chain";
+import GameProvider from "../context/game-context";
 
 
 // This is the chain your dApp will work on.
@@ -18,6 +19,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <ChainContext.Provider value={{ selectedChain, setSelectedChain }}>
+    <GameProvider>
     <ThirdwebProvider
       clientId={process.env.NEXT_PUBLIC_TEMPLATE_CLIENT_ID}
       activeChain={ selectedChain }
@@ -27,6 +29,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       {/* <Navbar /> */}
       <Component {...pageProps} />
     </ThirdwebProvider>
+    </GameProvider>
     </ChainContext.Provider>
   );
 }

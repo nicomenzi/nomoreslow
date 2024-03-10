@@ -3,6 +3,7 @@ import { Tile as TileModel } from '../models/tile';
 import styles from '../styles/Board.module.css';
 import Tile from './tile';
 import gamerReducer, { initialState } from '../reducers/game-reducer';
+import { mergeAnimationDuration } from '../constants/gameConstants';
 
 export default function Board() {
 
@@ -31,7 +32,7 @@ export default function Board() {
             }
             
         }
-        dispatch({type: "clean_up"});
+        setTimeout(() => dispatch({type: "clean_up"}), mergeAnimationDuration) ;
     }
 
     const renderGrid = () => {
