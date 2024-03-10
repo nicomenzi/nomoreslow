@@ -1,13 +1,14 @@
-import { Tile } from "../models/tile";
+import { tileCountPerDimension } from "../constants/gameConstants";
+import { Tile, TileMap } from "../models/tile";
 import { uid } from "uid";
 
-type State = { board: string[][]; tiles: { [id: string]: Tile}}
+type State = { board: string[][]; tiles: TileMap;}
 
 
 type Action = { type: "create_tile"; tile: Tile; } 
 
 
-function createBoard(tileCountPerDimension: number = 4) {
+function createBoard() {
     const board: string [][] = [];
 
     for (let i = 0; i < tileCountPerDimension; i += 1) {
