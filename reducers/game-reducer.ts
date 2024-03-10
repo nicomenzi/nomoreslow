@@ -38,7 +38,7 @@ export default function gamerReducer(state: State = initialState, action: Action
                 board: newBoard,
                 tiles: {
                     ...state.tiles,
-                    [tileId]: action.tile
+                    [tileId]: {id: tileId, ...action.tile }
                 }
             };
         }
@@ -57,10 +57,14 @@ export default function gamerReducer(state: State = initialState, action: Action
 
                     if (!isNil(tileId)) {
                         if (previousTile?.value === currentTile.value) {
+                            newTiles[previousTile.id as string] = {
+                                ...previousTile,
+                                value: previousTile.value * 2
+                            };
                             newTiles[tileId] = {
                                 ...currentTile,
                                 position: [x, newY - 1],
-                            }
+                            };
                             previousTile = undefined;
                             continue;
                         }
@@ -93,6 +97,10 @@ export default function gamerReducer(state: State = initialState, action: Action
 
                     if (!isNil(tileId)) {
                         if (previousTile?.value === currentTile.value) {
+                            newTiles[previousTile.id as string] = {
+                                ...previousTile,
+                                value: previousTile.value * 2
+                            };
                             newTiles[tileId] = {
                                 ...currentTile,
                                 position: [x, newY + 1]
@@ -129,6 +137,10 @@ export default function gamerReducer(state: State = initialState, action: Action
 
                     if (!isNil(tileId)) {
                         if (previousTile?.value === currentTile.value) {
+                            newTiles[previousTile.id as string] = {
+                                ...previousTile,
+                                value: previousTile.value * 2
+                            };
                             newTiles[tileId] = {
                                 ...currentTile,
                                 position: [newX - 1, y]
@@ -164,6 +176,10 @@ export default function gamerReducer(state: State = initialState, action: Action
                     const currentTile = state.tiles[tileId];
                     if (!isNil(tileId)) {
                         if (previousTile?.value === currentTile.value) {
+                            newTiles[previousTile.id as string] = {
+                                ...previousTile,
+                                value: previousTile.value * 2
+                            };
                             newTiles[tileId] = {
                                 ...currentTile,
                                 position: [newX + 1, y]

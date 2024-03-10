@@ -43,7 +43,8 @@ export default function Board() {
     };
 
     const rednerTiles = () => {
-        return Object.values(gameState.tiles).map((tile: TileModel, index:number) => {
+        return Object.values(gameState.tiles).map(
+            (tile: TileModel, index:number) => {
             return <Tile key={`${index}`} {...tile} />
         });
     }
