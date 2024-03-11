@@ -3,7 +3,7 @@ import { tileCountPerDimension } from "../constants/gameConstants";
 import { Tile, TileMap } from "../models/tile";
 import { uid } from "uid";
 
-type State = { board: string[][]; tiles: TileMap;}
+type State = { board: string[][]; tiles: TileMap; tilesbyIds: string[];}
 
 
 type Action = 
@@ -23,7 +23,7 @@ function createBoard() {
     return board;
 }
 
-export const initialState: State = {board: createBoard(), tiles: {}};
+export const initialState: State = {board: createBoard(), tiles: {}, tilesbyIds: []};
 
 export default function gamerReducer(state: State = initialState, action: Action) {
 
@@ -41,7 +41,8 @@ export default function gamerReducer(state: State = initialState, action: Action
             }, {});
             return {
                 ...state,
-                tiles: newTiles
+                tiles: newTiles,
+                tilesbyIds: Object.keys(newTiles)
             };
         }
 
@@ -57,7 +58,8 @@ export default function gamerReducer(state: State = initialState, action: Action
                 tiles: {
                     ...state.tiles,
                     [tileId]: {id: tileId, ...action.tile }
-                }
+                },
+                tilesByIds: [...state.tilesbyIds, tileId]
             };
         }
 

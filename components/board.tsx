@@ -1,16 +1,17 @@
-import { use, useEffect, useReducer, useRef } from 'react';
+import { use, useCallback, useContext, useEffect, useReducer, useRef } from 'react';
 import { Tile as TileModel } from '../models/tile';
 import styles from '../styles/Board.module.css';
 import Tile from './tile';
-import gamerReducer, { initialState } from '../reducers/game-reducer';
 import { mergeAnimationDuration } from '../constants/gameConstants';
+import { GameContext } from '../context/game-context';
 
 export default function Board() {
 
-    const [gameState, dispatch] = useReducer(gamerReducer, initialState)
+    const { appendRandomTile, getTiles, dispatch} = useContext(GameContext);
+
     const initialized = useRef(false);
 
-    const handleKeyDown = (e: KeyboardEvent) => {
+    const handleKeyDown = useCallback( (e: KeyboardEvent) => {
         e.preventDefault();
 
         switch (e.code) {
@@ -32,8 +33,11 @@ export default function Board() {
             }
             
         }
-        setTimeout(() => dispatch({type: "clean_up"}), mergeAnimationDuration) ;
-    }
+        setTimeout(() => {
+            dispatch({type: "clean_up"})
+            appendRandomTile();
+        }, mergeAnimationDuration); 
+    }, [appendRandomTile, dispatch]);
 
     const renderGrid = () => {
         const cells: JSX.Element[] = [];
@@ -42,12 +46,12 @@ export default function Board() {
             cells.push(<div key={i} className={styles.cell}></div>);
         }
         return cells;
-    };
+    }; 
 
     const rednerTiles = () => {
-        return Object.values(gameState.tiles).map(
-            (tile: TileModel, index:number) => {
-            return <Tile key={`${index}`} {...tile} />
+        return getTiles().map(
+            (tile: TileModel) => {
+            return <Tile key={`${tile.id}`} {...tile} />
         });
     }
 
@@ -58,7 +62,7 @@ export default function Board() {
             dispatch({type: "create_tile", tile: {position: [0,2], value: 2}})
             initialized.current = true;
         }
-    }, [])
+    }, [dispatch])
 
     useEffect(() => {
         window.addEventListener('keydown', handleKeyDown);
@@ -67,7 +71,7 @@ export default function Board() {
             window.removeEventListener('keydown', handleKeyDown);
         }
 
-    }, [])
+    }, [handleKeyDown])
 
 
 

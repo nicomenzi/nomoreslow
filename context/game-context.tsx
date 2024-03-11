@@ -1,10 +1,47 @@
-import { PropsWithChildren, createContext } from "react";
+import { PropsWithChildren, createContext, useReducer } from "react";
+import gamerReducer, { initialState } from "../reducers/game-reducer";
+import { tileCountPerDimension } from "../constants/gameConstants";
+import { isNil } from "lodash";
+import { Tile } from "../models/tile";
 
-export const GameContext = createContext({});
+export const GameContext = createContext({
+    appendRandomTile: () => {}, 
+    getTiles: () => [] as Tile[],
+    dispatch: (_: any) => {}});
 
 export default function GameProvider({ children }: PropsWithChildren) {
+    const [gameState, dispatch] = useReducer(gamerReducer, initialState);
+
+    const getEmptyCells = () => {
+        const results: [number, number][] = [];
+        for (let x = 0; x < tileCountPerDimension; x++) {
+            for (let y = 0; y < tileCountPerDimension; y++) {
+                if (isNil(gameState.board[x][y])) {
+                    results.push([x, y]);
+                }
+            }
+        }
+        return results;
+    }
+
+    const appendRandomTile = () => {
+        const emptyCells = getEmptyCells();
+        if (emptyCells.length > 0) {
+            const cellIndex = Math.floor(Math.random() * emptyCells.length);
+            const newTile = {
+                position: emptyCells[cellIndex],
+                value: 2,
+            }
+            dispatch({ type: "create_tile", tile: newTile });
+        }
+    };
+
+    const getTiles = () => {
+        return gameState.tilesbyIds.map((tileId: string) => gameState.tiles[tileId]);
+    }
+
     return (
-        <GameContext.Provider value={{}}>
+        <GameContext.Provider value={{appendRandomTile, getTiles, dispatch}}>
             {children}
         </GameContext.Provider>
     )
